@@ -1,0 +1,22 @@
+{
+    "name": "ailixter/puzzle-middleware",
+    "description": "Very basic middleware dispatcher",
+    "require": {
+        "php": "^7.1",
+        "psr/http-server-middleware": "^1.0",
+        "psr/http-server-handler": "^1.0"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Ailixter\\Puzzle\\": "src/",
+            "Ailixter\\Puzzle\\Example\\": "example/"
+        }
+    },
+    "authors": [
+        {
+            "name": "ailixter",
+            "email": "ailixter@gmail.com"
+        }
+    ]
+}
