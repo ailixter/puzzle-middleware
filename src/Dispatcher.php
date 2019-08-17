@@ -21,41 +21,36 @@ class Dispatcher implements RequestHandlerInterface, MiddlewareInterface
      */
     private $queue = [];
     /**
-     * @var ResponseInterface
+     * @var MiddlewareInterface
      */
     private $fallback;
 
     /**
-     * @param ResponseInterface $fallback - the response if nothing was found to handle a request
-     *                                      (404 or something like that)
+     * @param MiddlewareInterface $fallback - the middleware if nothing was found to handle a request
+     *                                      (to return 404 or something like that)
      */
-    public function __construct(ResponseInterface $fallback)
+    public function __construct(MiddlewareInterface $fallback)
     {
         $this->fallback = $fallback;
     }
 
-    /**
-     */
-    public function add(MiddlewareInterface $middleware): self
+    final public function enqueue(MiddlewareInterface $middleware): self
     {
         $this->queue[] = $middleware;
         return $this;
     }
 
-    /**
-     */
     final public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        $middleware = array_shift($this->queue) ?? $this;
+        $middleware = array_shift($this->queue) ?? $this->fallback;
         return $middleware->process($request, $this);
     }
 
     /**
-     * Returns fallback response by default.
-     * Override it to customize its behavior.
+     * Allows to chain Dispatcher to handlers queue.
      */
-    public function process(ServerRequestInterface $request, RequestHandlerInterface $next): ResponseInterface
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler = null): ResponseInterface
     {
-        return $this->fallback;
+        return $this->handle($request);
     }
 }
